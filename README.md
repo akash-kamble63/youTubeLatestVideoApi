@@ -45,6 +45,11 @@ REDIS_URL=redis://redis:6379
 - REDIS_URL=redis://redis:6379
 ---
 
+---
+## To get the API Key 
+[[YouTube data v3 API](https://developers.google.com/youtube/v3/getting-started "YouTube data v3 API")
+---
+
 ## Running with Docker
 
 ***Build and start services:***
