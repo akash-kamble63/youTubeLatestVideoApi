@@ -1,4 +1,4 @@
-# youTubeLatestVideoApi
+# YouTube Latest Video Api
 Fetch youtubes latest video details by category 
 
 This project polls the YouTube Data API for the latest videos on a given search query and stores them in a **PostgreSQL** database.  
