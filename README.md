@@ -16,9 +16,9 @@ It is fully **Dockerized** and can be run with a single `docker-compose` command
 ---
 
 # Database
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=admin
-POSTGRES_DB=youtube
+- POSTGRES_USER=postgres
+- POSTGRES_PASSWORD=admin
+- POSTGRES_DB=youtube
 
 ---
 
@@ -40,12 +40,9 @@ YT_API_KEYS = abc #if mutiple comma-separated for rotation
 - POSTGRES_URL=postgres://postgres:admin@localhost:5432/youtube
 - SEARCH_QUERY=cricket
 - POLL_INTERVAL_MS=10000   # 10 seconds
+- YT_API_KEYS=abc,def,ghi
 ---
 
-# YouTube API keys (comma-separated for rotation)
-YT_API_KEYS=abc,def,ghi
-
----
 ## Running with Docker
 
 ***Build and start services:***
