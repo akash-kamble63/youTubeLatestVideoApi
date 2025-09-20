@@ -32,6 +32,7 @@ POSTGRES_URL = abc
 SEARCH_QUERY = abc
 POLL_INTERVAL_MS = 12312 #in seconds
 YT_API_KEYS = abc #if mutiple comma-separated for rotation
+REDIS_URL=redis://redis:6379
 
 ```
 ---
@@ -41,6 +42,7 @@ YT_API_KEYS = abc #if mutiple comma-separated for rotation
 - SEARCH_QUERY=cricket
 - POLL_INTERVAL_MS=10000   # 10 seconds
 - YT_API_KEYS=abc,def,ghi
+- REDIS_URL=redis://redis:6379
 ---
 
 ## Running with Docker
