@@ -33,8 +33,8 @@ SEARCH_QUERY = abc
 POLL_INTERVAL_MS = 12312 #in seconds
 YT_API_KEYS = abc #if mutiple comma-separated for rotation
 
-
-Example
+```
+## Example
 PORT=3000
 
 # PostgreSQL connection string
@@ -49,34 +49,43 @@ POLL_INTERVAL_MS=10000   # 10 seconds
 # YouTube API keys (comma-separated for rotation)
 YT_API_KEYS=abc,def,ghi
 
-```
-
 ---
 ## Running with Docker
 
 ***Build and start services:***
+```
 docker-compose up --build
-
+```
 ***To stop***
+```
 docker-compose down
+```
 
 ## Running without Docker
 
 ***Install dependencies***
+```
 npm install
+```
 
 ***Run code***
+```
 node src/fetchData.js
-
+```
 ---
 
 ## API Endpoints
 
 ***Get Latest Videos:***
+```
 http://localhost:<PORT-NUMBER>/videos #eg - http://localhost:3000/videos
-
+```
 ***Get Video by ID:***
+```
 http://localhost:<PORT-NUMBER>/videos/abcd1234 
-
+```
 ***Search Stored Videos:***
+```
 http://localhost:<PORT-NUMBER>/videos/search?query=highlights
+```
+---
