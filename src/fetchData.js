@@ -1,24 +1,26 @@
-// Load environment variables from .env
+// Load environment variables
 require('dotenv').config();
 
-// Import Sequelize DB instance and Video model
 const sequelize = require('./db');
 const Video = require('./models/video');
-
-// Import YouTube API service function
 const { fetchVideosForQuery } = require('./services/youtubeClient');
+const redis = require('redis');
 
-// Configurable constants
-const QUERY = process.env.SEARCH_QUERY || 'official'; // search term
+// Config
+const QUERY = process.env.SEARCH_QUERY || 'official';
 const INTERVAL_MS = parseInt(process.env.POLL_INTERVAL_MS || '1800000', 10); // default 30 min
-// fetch recent N days
 const POLL_WINDOW_DAYS = parseInt(process.env.POLL_WINDOW_DAYS || '30', 10);
-// limit max pages per poll 
-const MAX_PAGES = parseInt(process.env.MAX_PAGES || '5', 10); 
+const MAX_PAGES = parseInt(process.env.MAX_PAGES || '5', 10);
+
+// Create Redis client
+const redisClient = redis.createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379',
+});
+redisClient.on('error', (err) => console.error('Redis error:', err));
+(async () => await redisClient.connect())();
 
 // Bulk upsert videos into DB
 async function bulkUpsertVideos(items) {
-  // Map raw API items to Video model data
   const bulkData = items.map(item => ({
     youtubeId: item.id.videoId,
     title: item.snippet.title,
@@ -28,73 +30,70 @@ async function bulkUpsertVideos(items) {
     raw: item,
   }));
 
-  if (bulkData.length === 0) return 0; 
+  if (bulkData.length === 0) return 0;
 
-  // Bulk insert or update existing videos (updateOnDuplicate ensures updates)
   const result = await Video.bulkCreate(bulkData, {
     updateOnDuplicate: ['title', 'description', 'publishedAt', 'thumbnails', 'raw'],
   });
 
-  return result.length; // number of records inserted
+  return result.length;
+}
+
+// Update Redis cache for latest videos
+async function updateRedisCache() {
+  const latestVideos = await Video.findAll({
+    order: [['publishedAt', 'DESC']],
+    limit: 50, // cache top 50 videos
+  });
+  await redisClient.setEx('latest_videos', 300, JSON.stringify(latestVideos)); // 5 min expiry
 }
 
 // Fetch all videos from YouTube API
 async function fetchAllVideos(query) {
-
-  // Step 1: find the latest video in DB
   const latestVideo = await Video.findOne({
     order: [['publishedAt', 'DESC']],
   });
 
-  // Step 2: determine publishedAfter to avoid fetching old videos
   const publishedAfter = latestVideo
     ? new Date(latestVideo.publishedAt).toISOString()
-    : new Date(Date.now() - POLL_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString(); // fallback 30 days
+    : new Date(Date.now() - POLL_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString();
 
-  let pageToken = null; // for pagination
-  let totalFetched = 0; // total videos fetched
-  let pageCount = 0; // pages fetched
-  let newVideosFound = false; // flag to stop early if no new videos
+  let pageToken = null;
+  let totalFetched = 0;
+  let pageCount = 0;
+  let newVideosFound = false;
 
   while (true) {
     pageCount++;
-    if (pageCount > MAX_PAGES) {
-      console.log('Reached max pages, stopping.');
-      break; // avoid too many API calls
-    }
+    if (pageCount > MAX_PAGES) break;
 
-    // Fetch videos from YouTube API
     const res = await fetchVideosForQuery(query, pageToken, 10, publishedAfter);
     if (!res || !res.items || res.items.length === 0) break;
 
-    // Insert fetched videos in bulk
     const insertedCount = await bulkUpsertVideos(res.items);
     if (insertedCount > 0) newVideosFound = true;
+
+    // Update Redis cache if new videos found
+    if (insertedCount > 0) {
+      await updateRedisCache();
+    }
 
     totalFetched += res.items.length;
     console.log(`Fetched ${res.items.length} items (total ${totalFetched}), inserted ${insertedCount} new`);
 
-    // Stop early if no new videos found
-    if (!newVideosFound) {
-      console.log('No new videos, stopping early.');
-      break;
-    }
-
-    // Stop if no next page token
+    if (!newVideosFound) break;
     if (!res.nextPageToken) break;
-    // continue to next page
-    pageToken = res.nextPageToken; 
+    pageToken = res.nextPageToken;
   }
 }
 
-// Polling function to repeatedly fetch videos
+// Polling function
 async function poll() {
   try {
     console.log(`Polling for query "${QUERY}"...`);
     await fetchAllVideos(QUERY);
   } catch (e) {
     if (e.response && e.response.data) {
-      // Handle YouTube API errors
       console.error('YouTube API Error:', JSON.stringify(e.response.data, null, 2));
     } else {
       console.error('Poll error:', e.message || e);
@@ -102,15 +101,13 @@ async function poll() {
   }
 }
 
-// Main entry point
+// Main
 (async () => {
-  await sequelize.authenticate(); // connect to DB
-  await sequelize.sync(); // sync models (dev only)
+  await sequelize.authenticate();
+  await sequelize.sync();
   console.log('Poller started. Query:', QUERY, 'Interval:', INTERVAL_MS);
 
-  // Continuous polling loop
+  // Continuous polling
   setInterval(poll, INTERVAL_MS);
-
-  // Run once immediately to fetch data right away
   poll();
 })();

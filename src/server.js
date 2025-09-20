@@ -1,4 +1,4 @@
-require("./youtubePoller");  // starts background polling
+require("./fetchData");  // starts background polling
 
 const express = require("express");
 const Video = require("./models/video");

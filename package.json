@@ -12,6 +12,7 @@
     "dotenv": "^16.6.1",
     "express": "^4.21.2",
     "pg": "^8.11.0",
+    "redis": "^5.8.2",
     "sequelize": "^6.32.1",
     "sequelize-cli": "^6.6.1"
   },
