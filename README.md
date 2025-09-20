@@ -35,16 +35,10 @@ YT_API_KEYS = abc #if mutiple comma-separated for rotation
 
 ```
 ## Example
-PORT=3000
-
-# PostgreSQL connection string
-POSTGRES_URL=postgres://postgres:admin@localhost:5432/youtube
-
-# Search query for YouTube
-SEARCH_QUERY=cricket
-
-# Poll interval (in milliseconds)
-POLL_INTERVAL_MS=10000   # 10 seconds
+-PORT=3000
+-POSTGRES_URL=postgres://postgres:admin@localhost:5432/youtube
+-SEARCH_QUERY=cricket
+-POLL_INTERVAL_MS=10000   # 10 seconds
 
 # YouTube API keys (comma-separated for rotation)
 YT_API_KEYS=abc,def,ghi
