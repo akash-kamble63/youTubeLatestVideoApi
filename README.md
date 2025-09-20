@@ -60,7 +60,7 @@ docker-compose up --build
 ```
 docker-compose down
 ```
-
+---
 ## Running without Docker
 
 ***Install dependencies***
