@@ -8,7 +8,7 @@ const Video = sequelize.define('Video', {
   description: { type: DataTypes.TEXT },
   publishedAt: { type: DataTypes.DATE },
   thumbnails: { type: DataTypes.JSONB }, // store all thumbnail URLs
-  raw: { type: DataTypes.JSONB }, // store the entire API response
+  raw: { type: DataTypes.JSONB }, // store the entire API response for future proofing/flexibility/debugging/backup
 }, {
   indexes: [
     { fields: ['publishedAt'] },
