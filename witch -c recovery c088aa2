@@ -1,0 +1,12 @@
+[33m0930d71[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{0}: checkout: moving from c088aa2534b9ef2b9d65af21b394ee794774ece0 to main
+[33mc088aa2[m HEAD@{1}: checkout: moving from main to c088aa2
+[33m0930d71[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{2}: reset: moving to origin/main
+[33m0930d71[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{3}: reset: moving to origin/main
+[33mc088aa2[m HEAD@{4}: pull origin main --rebase (finish): returning to refs/heads/main
+[33mc088aa2[m HEAD@{5}: pull origin main --rebase (pick): Done with the main code. need to add comments, readme file and some improvements
+[33m154fa08[m HEAD@{6}: pull origin main --rebase (pick): Done the code need to add comments, readme file and improve some code
+[33m0930d71[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{7}: pull origin main --rebase (start): checkout 0930d71fca32e8a0a366407e9a2736a1ea576b7f
+[33m925409a[m HEAD@{8}: commit: Done with the main code. need to add comments, readme file and some improvements
+[33m0930d71[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m HEAD@{9}: pull origin main --rebase (start): checkout 0930d71fca32e8a0a366407e9a2736a1ea576b7f
+[33mf3fc694[m HEAD@{10}: Branch: renamed refs/heads/master to refs/heads/main
+[33mf3fc694[m HEAD@{12}: commit (initial): Done the code need to add comments, readme file and improve some code
