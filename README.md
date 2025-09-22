@@ -86,6 +86,6 @@ http://localhost:<PORT-NUMBER>/videos/abcd1234
 ```
 ***Search Stored Videos:***
 ```
-http://localhost:<PORT-NUMBER>/videos/search?query=highlights
+http://localhost:<PORT-NUMBER>/videos/search?q=highlights
 ```
 ---
